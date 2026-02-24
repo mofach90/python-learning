@@ -44,3 +44,81 @@ Build a minimal toy programming language (“Momolang”) in Python to solidify 
 - Floating point numbers
 - Bytecode compilation / VM (tree-walk interpreter only in v0.1)
 - Optimizations (performance is not a goal)
+
+## Acceptance Criteria (v0.1 / MVP)
+
+### A) Correct execution
+
+Given these programs, the interpreter must produce the exact output (each `print(...)` writes the value followed by a newline):
+
+1) Program:
+```txt
+print(2 + 3);
+```
+Expected output:
+```txt
+5
+```
+
+2) Program:
+```txt
+print(2 + 3 * 2);
+```
+Expected output:
+```txt
+8
+```
+
+Notes:
+- Requires operator precedence: `*` binds tighter than `+`.
+
+3) Program:
+```txt
+print("hi there");
+```
+Expected output:
+```txt
+hi there
+```
+
+### B) Error behavior
+
+1) Lexing error (invalid character)
+
+Program:
+```txt
+print(5 & 1);
+```
+
+Expected result:
+- A `LexError` that points to the `&` character and includes line/column info.
+
+2) Parsing error (invalid syntax)
+
+Program:
+```txt
+print(5 + + 1);
+```
+
+Expected result:
+- A `ParseError` with line/column info (e.g., "expected expression after '+'").
+
+3) Runtime error (type mismatch)
+
+Program:
+```txt
+print(5 + "a");
+```
+
+Expected result:
+- A `RuntimeError` indicating invalid operand types for `+`.
+
+### C) Tooling (MVP)
+
+- The project must provide a CLI that runs a source file, e.g.:
+  - `python -m momolang path/to/file.momo`
+- The project must include automated tests covering:
+  - lexer/tokenizer
+  - parser (AST)
+  - interpreter (evaluation/output)
+- Optional (not required in v0.1): debug flags like `--tokens` and `--ast`.
