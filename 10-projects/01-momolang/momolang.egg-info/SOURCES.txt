@@ -1,0 +1,11 @@
+README.md
+pyproject.toml
+momolang/__init__.py
+momolang/errors.py
+momolang/lexer.py
+momolang/tokens.py
+momolang.egg-info/PKG-INFO
+momolang.egg-info/SOURCES.txt
+momolang.egg-info/dependency_links.txt
+momolang.egg-info/top_level.txt
+tests/test_lexer.py
