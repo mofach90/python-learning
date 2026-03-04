@@ -9,9 +9,9 @@ from .tokens import Token, TokenType
 @dataclass
 class Lexer:
     source: str
-    current: int = 0     # index into source
-    line: int = 1        # 1-based
-    column: int = 1      # 1-based
+    current: int = 0  # index into source
+    line: int = 1  # 1-based
+    column: int = 1  # 1-based
 
     def tokenize(self) -> list[Token]:
         tokens: list[Token] = []
@@ -23,7 +23,7 @@ class Lexer:
             if c in (" ", "\t", "\r", "\n"):
                 self.advance()
                 continue
-                
+
             # Single-character tokens
             if c == "(":
                 tokens.append(self.make_simple(TokenType.LPAREN))
@@ -100,14 +100,18 @@ class Lexer:
         while not self.is_at_end() and self.peek() != '"':
             # v0.1: no escapes, but allow newlines? we'll disallow for simplicity
             if self.peek() == "\n":
-                raise LexError("Unterminated string (newline encountered)", start_line, start_col)
+                raise LexError(
+                    "Unterminated string (newline encountered)", start_line, start_col
+                )
             self.advance()
 
         if self.is_at_end():
-            raise LexError("Unterminated string (missing closing quote)", start_line, start_col)
+            raise LexError(
+                "Unterminated string (missing closing quote)", start_line, start_col
+            )
 
         # content inside quotes
-        value = self.source[start_index:self.current]
+        value = self.source[start_index : self.current]
 
         # closing quote
         self.advance()
@@ -122,11 +126,15 @@ class Lexer:
         while not self.is_at_end() and self.peek().isalpha():
             self.advance()
 
-        text = self.source[start:self.current]
+        text = self.source[start : self.current]
         if text == "print":
             return Token(TokenType.PRINT, text, None, line, col)
 
-        raise LexError(f"Unknown identifier {text!r} (only 'print' is supported in v0.1)", line, col)
+        raise LexError(
+            f"Unknown identifier {text!r} (only 'print' is supported in v0.1)",
+            line,
+            col,
+        )
 
     def number_token(self) -> Token:
         line, col = self.line, self.column
@@ -135,5 +143,5 @@ class Lexer:
         while not self.is_at_end() and self.peek().isdigit():
             self.advance()
 
-        text = self.source[start:self.current]
+        text = self.source[start : self.current]
         return Token(TokenType.NUMBER, text, int(text), line, col)

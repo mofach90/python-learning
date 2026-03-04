@@ -14,12 +14,12 @@ class TokenType(Enum):
     STRING = auto()
 
     # Operators
-    PLUS = auto()       # +
-    STAR = auto()       # *
+    PLUS = auto()  # +
+    STAR = auto()  # *
 
     # Punctuation
-    LPAREN = auto()     # (
-    RPAREN = auto()     # )
+    LPAREN = auto()  # (
+    RPAREN = auto()  # )
     SEMICOLON = auto()  # ;
 
     # Special
@@ -29,10 +29,10 @@ class TokenType(Enum):
 @dataclass(frozen=True)
 class Token:
     type: TokenType
-    lexeme: str          # raw text slice from the source
-    literal: Any         # parsed value for NUMBER/STRING, else None
-    line: int            # 1-based
-    column: int          # 1-based
+    lexeme: str  # raw text slice from the source
+    literal: Any  # parsed value for NUMBER/STRING, else None
+    line: int  # 1-based
+    column: int  # 1-based
 
     def __repr__(self) -> str:
         # Useful during debugging and in failing tests

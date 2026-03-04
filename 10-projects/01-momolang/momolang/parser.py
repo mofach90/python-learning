@@ -35,7 +35,9 @@ class Parser:
         self.consume(TokenType.PRINT, "Expected 'print'")
         self.consume(TokenType.LPAREN, "Expected '(' after 'print'")
 
-        string_token = self.consume(TokenType.STRING, "Expected string literal inside print(...)")
+        string_token = self.consume(
+            TokenType.STRING, "Expected string literal inside print(...)"
+        )
         expr = LiteralExpr(value=string_token.literal)
 
         self.consume(TokenType.RPAREN, "Expected ')' after print expression")

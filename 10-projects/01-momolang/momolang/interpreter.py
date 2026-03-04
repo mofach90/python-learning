@@ -3,7 +3,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .ast_nodes import LiteralExpr, PrintStmt, Program
-from .errors import MomolangRuntimeError
 
 
 @dataclass

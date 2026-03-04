@@ -10,9 +10,5 @@ def test_parser_builds_ast_for_print_string_statement():
     program = Parser(tokens).parse()
 
     assert program == Program(
-        statements=[
-            PrintStmt(
-                expr=LiteralExpr(value="Hello world")
-            )
-        ]
+        statements=[PrintStmt(expr=LiteralExpr(value="Hello world"))]
     )
