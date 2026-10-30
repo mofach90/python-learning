@@ -12,16 +12,18 @@ def get_choice():
             return choice
         print("\n Please provide a valid choice :) ")
         
-def remove_task_title(list_task):
+def remove_task_with_title(list_task):
     task_title = ""
     while not task_title or task_title not in list_task:
+        print("Your awesome task list:",list_task)
         task_title = input("\nEntre a title from your task list: ").strip()
     print(f"\nRemoving {task_title}")
     list_task.remove(task_title)
 
-def remove_task_index(list_task):
+def remove_task_whith_index(list_task):
     task_index = ""
     while not task_index.isdigit() or int(task_index) not in range(1,len(list_task)+1):
+        print("Your awesome task list:",list_task)
         task_index = input("\nEnter your task index from the list: ")
     task_index_rem = int(task_index) - 1
     print(f"\nRemoving {list_task[task_index_rem]}")
