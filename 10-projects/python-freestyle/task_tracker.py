@@ -25,8 +25,8 @@ def remove_task_index(list_task):
         task_index = input("\nEnter your task index from the list: ")
     task_index_rem = int(task_index) - 1
     print(f"\nRemoving {list_task[task_index_rem]}")
-    list_task.remove(list_task[task_index_rem])
-
+    list_task.pop(task_index_rem)
+ 
 
 def exit_programm():
     print("\nExiting....")
@@ -64,7 +64,6 @@ choice_action_map = {
 
 choice = get_choice()
 func, kwargs = choice_action_map[choice]
-# print(**kwargs)
 func(**kwargs)
 
 show_task_list(list_task)
