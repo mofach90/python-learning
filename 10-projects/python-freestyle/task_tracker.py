@@ -1,5 +1,6 @@
 
-# ask tje user which task they completed
+
+
 def get_choice():
     choices = ["0","1","2"]
     while True:
@@ -15,7 +16,7 @@ def get_choice():
 def remove_task_with_title(list_task):
     task_title = ""
     while not task_title or task_title not in list_task:
-        print("Your awesome task list:",list_task)
+        show_task_list(list_task)
         task_title = input("\nEntre a title from your task list: ").strip()
     print(f"\nRemoving {task_title}")
     list_task.remove(task_title)
@@ -23,7 +24,7 @@ def remove_task_with_title(list_task):
 def remove_task_whith_index(list_task):
     task_index = ""
     while not task_index.isdigit() or int(task_index) not in range(1,len(list_task)+1):
-        print("Your awesome task list:",list_task)
+        show_task_list(list_task)
         task_index = input("\nEnter your task index from the list: ")
     task_index_rem = int(task_index) - 1
     print(f"\nRemoving {list_task[task_index_rem]}")
@@ -41,33 +42,34 @@ def show_task_list(list_task):
     for i in list_task:
         print(f"{n} : {i}\n")
         n += 1
+
+def fill_task_list() -> list[str]:
+    list_task = []
+    task_title = ""
+    while task_title.lower() != "done":
+        if task_title and task_title not in list_task:
+            list_task.append(task_title)
+        task_title = input("\nPlease entre a task title: ").strip()
+    if not list_task:
+        exit_programm()  
+    show_task_list(list_task)
+    return list_task
     
 
-list_task = []
-task_title = ""
-while task_title.lower() != "done":
-    if task_title and task_title not in list_task:
-        list_task.append(task_title)
-    task_title = input("\nPlease entre a task title: ").strip()
-if not list_task:
-    print(" no tasks ! program exit ..")
-    exit()
+def main():
+    list_task = fill_task_list()
+    choice_action_map = {
+        "0": (exit_programm, {}),
+        "1": (remove_task_with_title, {"list_task":list_task}),
+        "2": (remove_task_whith_index, {"list_task":list_task}),
+    }
+    while True:  
+        choice = get_choice()
+        func, kwargs = choice_action_map[choice]
+        func(**kwargs)
+        show_task_list(list_task)
 
-show_task_list(list_task)
+main()
     
-task_title = ""
-task_number = "-1"
-# get choices
-choice_action_map = {
-    "0": (exit_programm, {}),
-    "1": (remove_task_title, {"list_task":list_task}),
-    "2": (remove_task_index, {"list_task":list_task}),
-}
-
-choice = get_choice()
-func, kwargs = choice_action_map[choice]
-func(**kwargs)
-
-show_task_list(list_task)
 
 
