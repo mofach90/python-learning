@@ -1,8 +1,8 @@
 # Learning log
 
 - **Project:** In-memory command-line task tracker.
-- **Completed milestone:** Collect task titles, display them, and remove one task by title or list position. Read from code; not run.
-- **Concepts demonstrated:** Input validation, loops, lists, functions, dictionaries, and dispatching a selected action.
-- **Practice next:** Keep a menu-driven program running across multiple actions and make exit behavior predictable.
-- **Current blocker:** None reported.
-- **Next task:** Let the user perform multiple remove actions before exiting the task tracker.
+- **Completed milestone:** Collect task titles, display them, keep the remove menu available for multiple actions, and leave it with `break` on choice `0`. Code inspected; not run.
+- **Concepts demonstrated:** Input validation, loops, lists, functions, type hints, dictionaries, and dispatching a selected action.
+- **Practice next:** Handle an empty task list clearly; distinguish returning from `main()` from terminating the process.
+- **Current blocker:** The tracker uses `exit()` when the starting list is empty; removal functions also cannot accept a selection if called with an empty list.
+- **Next task:** Make the tracker end gracefully when the task list is empty, without calling `exit()`.

@@ -1,6 +1,5 @@
 
 
-
 def get_choice():
     choices = ["0","1","2"]
     while True:
@@ -59,15 +58,18 @@ def fill_task_list() -> list[str]:
 def main():
     list_task = fill_task_list()
     choice_action_map = {
-        "0": (exit_programm, {}),
+        "0": (),
         "1": (remove_task_with_title, {"list_task":list_task}),
         "2": (remove_task_whith_index, {"list_task":list_task}),
     }
-    while True:  
+    while list_task:  
         choice = get_choice()
+        if choice == "0" :
+            break
         func, kwargs = choice_action_map[choice]
         func(**kwargs)
         show_task_list(list_task)
+    return
 
 main()
     
