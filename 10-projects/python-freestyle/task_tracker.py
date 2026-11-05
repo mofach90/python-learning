@@ -12,50 +12,53 @@ def get_choice():
             return choice
         print("\n Please provide a valid choice :) ")
         
-def remove_task_with_title(list_task):
-    task_title = ""
-    while not task_title or task_title not in list_task:
-        show_task_list(list_task)
-        task_title = input("\nEntre a title from your task list: ").strip()
-    print(f"\nRemoving {task_title}")
-    list_task.remove(task_title)
-
 def remove_task_whith_index(list_task):
-    task_index = ""
-    while not task_index.isdigit() or int(task_index) not in range(1,len(list_task)+1):
+    new_task_list = {}
+    for i, (t, b) in enumerate(list_task.items(), start=1):
+        new_task_list[i] = (t,b)
+    # print("DEBUG:", new_task_list)
+    while True:
+        index = input("\nEnter your task index from the list: ").strip().lower()
+        if index.isdigit and int(index) in new_task_list:
+            break
+    (t,b ) = new_task_list[int(index)]
+    list_task[t] = False
+    
+def remove_task_with_title(list_task):
+    task = ""
+    while task not in list_task:
         show_task_list(list_task)
-        task_index = input("\nEnter your task index from the list: ")
-    task_index_rem = int(task_index) - 1
-    print(f"\nRemoving {list_task[task_index_rem]}")
-    list_task.pop(task_index_rem)
+        task = input("\nEnter your task title from the list: ").strip().lower()
+    print(f"\nRemoving {task}")
+    list_task[task] = False
  
 
-def exit_programm():
-    print("\nExiting....")
-    exit()
-    
+
+
 
 def show_task_list(list_task):
     print("\nYour task(s):\n")
-    n = 1
-    for i in list_task:
-        print(f"{n} : {i}\n")
-        n += 1
+    for i, (task, status) in enumerate(list_task.items(), start=1):
+        if status:
+            print(f"{i} : {task}\n")
+        else:
+            print(f"{i} : \033[9m{task}\033[0m\n")
+        # print("DEBUG:", enumerate(list_task.items(), start=1))
 
-def fill_task_list() -> list[str]:
-    list_task = []
+def fill_task_list() -> dict[str,bool]:
+    list_task = {}
     task_title = ""
-    while task_title.lower() != "done":
+    while task_title != "done":
         if task_title and task_title not in list_task:
-            list_task.append(task_title)
-        task_title = input("\nPlease entre a task title: ").strip()
-    if not list_task:
-        exit_programm()  
-    show_task_list(list_task)
+            list_task[task_title] =  True
+        task_title = input("\nPlease entre a task title: ").strip().lower()
+    if list_task:
+        show_task_list(list_task)
     return list_task
     
 
 def main():
+    
     list_task = fill_task_list()
     choice_action_map = {
         "0": (),
@@ -68,7 +71,9 @@ def main():
             break
         func, kwargs = choice_action_map[choice]
         func(**kwargs)
-        show_task_list(list_task)
+        if list_task: show_task_list(list_task)
+    print("\nExiting....")
+
     return
 
 main()
