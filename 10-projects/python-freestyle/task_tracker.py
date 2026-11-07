@@ -14,12 +14,16 @@ def get_choice():
         
 def remove_task_whith_index(list_task):
     new_task_list = {}
-    for i, (t, b) in enumerate(list_task.items(), start=1):
-        new_task_list[i] = (t,b)
-    # print("DEBUG:", new_task_list)
+    n = 1
+    for (t, b) in list_task.items():
+        if b:
+            new_task_list[n] = (t,b)
+            n += 1
+    print("DEBUG:", new_task_list)
     while True:
+        show_task_list(list_task)
         index = input("\nEnter your task index from the list: ").strip().lower()
-        if index.isdigit and int(index) in new_task_list:
+        if index.isdigit() and int(index) in new_task_list:
             break
     (t,b ) = new_task_list[int(index)]
     list_task[t] = False
@@ -37,13 +41,27 @@ def remove_task_with_title(list_task):
 
 
 def show_task_list(list_task):
-    print("\nYour task(s):\n")
+    print("\nYour task(s):")
+    uncomplete_tasks = []
+    complete_tasks = []
     for i, (task, status) in enumerate(list_task.items(), start=1):
         if status:
-            print(f"{i} : {task}\n")
+            uncomplete_tasks.append(task)
         else:
-            print(f"{i} : \033[9m{task}\033[0m\n")
-        # print("DEBUG:", enumerate(list_task.items(), start=1))
+            complete_tasks.append(task)
+    # print("DEBUG:", uncomplete_tasks)
+    if uncomplete_tasks:
+        print("\nUmcompleted Tasks:")
+        for i in range(len(uncomplete_tasks)):
+            print(f"{i+1} : {uncomplete_tasks[i]}")
+    else:
+        print("\nAll tasks are DONE !!")
+    if complete_tasks:
+        print("\nCompleted Tasks:")
+        # print("DEBUG:", complete_tasks)
+        for i in range(len(complete_tasks)):
+            print(f"{i+1} : \033[9m{complete_tasks[i]}\033[0m")
+            
 
 def fill_task_list() -> dict[str,bool]:
     list_task = {}
