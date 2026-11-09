@@ -1,4 +1,9 @@
-
+# i deided to transform the task-list directly inside fill_task_list() to a map like that: 
+# {
+# "uncomplete" : [list of uncompeted tasks], 
+# "complete"  ; [list of completed tasks]
+# }
+# then just send the uncomplete tasks to the remove functions, and inside the funtion move the uncomplete to the complete
 
 def get_choice():
     choices = ["0","1","2"]
@@ -13,19 +18,14 @@ def get_choice():
         print("\n Please provide a valid choice :) ")
         
 def remove_task_whith_index(list_task):
-    new_task_list = {}
-    n = 1
-    for (t, b) in list_task.items():
-        if b:
-            new_task_list[n] = (t,b)
-            n += 1
-    print("DEBUG:", new_task_list)
+
+    print("DEBUG:", list_task)
     while True:
         show_task_list(list_task)
         index = input("\nEnter your task index from the list: ").strip().lower()
-        if index.isdigit() and int(index) in new_task_list:
+        if index.isdigit() and int(index) in list_task:
             break
-    (t,b ) = new_task_list[int(index)]
+    (t,b ) = list_task[int(index)]
     list_task[t] = False
     
 def remove_task_with_title(list_task):
@@ -44,11 +44,11 @@ def show_task_list(list_task):
     print("\nYour task(s):")
     uncomplete_tasks = []
     complete_tasks = []
-    for i, (task, status) in enumerate(list_task.items(), start=1):
-        if status:
-            uncomplete_tasks.append(task)
+    for i in list_task:
+        if list_task[i][1]:
+            uncomplete_tasks.append(list_task[i][0])
         else:
-            complete_tasks.append(task)
+            complete_tasks.append(list_task[i][0])
     # print("DEBUG:", uncomplete_tasks)
     if uncomplete_tasks:
         print("\nUmcompleted Tasks:")
@@ -63,7 +63,7 @@ def show_task_list(list_task):
             print(f"{i+1} : \033[9m{complete_tasks[i]}\033[0m")
             
 
-def fill_task_list() -> dict[str,bool]:
+def fill_task_list() -> dict[str,tuple]:
     list_task = {}
     task_title = ""
     while task_title != "done":
@@ -71,9 +71,18 @@ def fill_task_list() -> dict[str,bool]:
             list_task[task_title] =  True
         task_title = input("\nPlease entre a task title: ").strip().lower()
     if list_task:
+        list_task = get_new_task_list(list_task)
         show_task_list(list_task)
     return list_task
-    
+
+def get_new_task_list(list_task) -> dict[str,tuple]:
+    new_task_list = {}
+    n = 1
+    for (t, b) in list_task.items():
+        if b:
+            new_task_list[n] = (t,b)
+            n += 1
+    return new_task_list
 
 def main():
     
@@ -87,9 +96,11 @@ def main():
         choice = get_choice()
         if choice == "0" :
             break
-        func, kwargs = choice_action_map[choice]
-        func(**kwargs)
-        if list_task: show_task_list(list_task)
+        if list_task:
+            func, kwargs = choice_action_map[choice]
+            func(**kwargs)
+        if list_task: 
+            show_task_list(list_task)
     print("\nExiting....")
 
     return
