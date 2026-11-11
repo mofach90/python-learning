@@ -18,23 +18,24 @@ def get_choice():
         print("\n Please provide a valid choice :) ")
         
 def remove_task_whith_index(list_task):
-
-    print("DEBUG:", list_task)
-    while True:
+    # print("DEBUG:", list_task)
+    index = ''
+    while list_task["uncomplete"]:
         show_task_list(list_task)
         index = input("\nEnter your task index from the list: ").strip().lower()
-        if index.isdigit() and int(index) in list_task:
+        if index.isdigit() and int(index) in list_task["uncomplete"]:
             break
-    (t,b ) = list_task[int(index)]
-    list_task[t] = False
+    list_task["complete"].append(list_task["uncomplte"][index])
+    list_task["uncomplete"].pop(index)
     
 def remove_task_with_title(list_task):
     task = ""
-    while task not in list_task:
+    while task not in list_task["uncomplete"]:
         show_task_list(list_task)
         task = input("\nEnter your task title from the list: ").strip().lower()
     print(f"\nRemoving {task}")
-    list_task[task] = False
+    list_task["complete"].append(task)
+    list_task["uncomplete"].remove(task)
  
 
 
@@ -42,13 +43,8 @@ def remove_task_with_title(list_task):
 
 def show_task_list(list_task):
     print("\nYour task(s):")
-    uncomplete_tasks = []
-    complete_tasks = []
-    for i in list_task:
-        if list_task[i][1]:
-            uncomplete_tasks.append(list_task[i][0])
-        else:
-            complete_tasks.append(list_task[i][0])
+    uncomplete_tasks = list_task["uncomplete"]
+    complete_tasks = list_task["uncomplete"]
     # print("DEBUG:", uncomplete_tasks)
     if uncomplete_tasks:
         print("\nUmcompleted Tasks:")
@@ -63,26 +59,27 @@ def show_task_list(list_task):
             print(f"{i+1} : \033[9m{complete_tasks[i]}\033[0m")
             
 
-def fill_task_list() -> dict[str,tuple]:
+def fill_task_list() -> dict[str,list]:
     list_task = {}
+    uncomplete = []
     task_title = ""
     while task_title != "done":
         if task_title and task_title not in list_task:
-            list_task[task_title] =  True
+            uncomplete.append(task_title)
         task_title = input("\nPlease entre a task title: ").strip().lower()
     if list_task:
-        list_task = get_new_task_list(list_task)
+        list_task = { "uncomplete" : uncomplete, "complete" : []}
         show_task_list(list_task)
     return list_task
 
-def get_new_task_list(list_task) -> dict[str,tuple]:
-    new_task_list = {}
-    n = 1
-    for (t, b) in list_task.items():
-        if b:
-            new_task_list[n] = (t,b)
-            n += 1
-    return new_task_list
+# def get_new_task_list(list_task) -> dict[str,tuple]:
+#     new_task_list = {}
+#     n = 1
+#     for (t, b) in list_task.items():
+#         if b:
+#             complete[n] = (t,b)
+#             n += 1
+#     return new_task_list
 
 def main():
     
