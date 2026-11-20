@@ -23,10 +23,10 @@ def remove_task_whith_index(list_task):
     while list_task["uncomplete"]:
         show_task_list(list_task)
         index = input("\nEnter your task index from the list: ").strip().lower()
-        if index.isdigit() and int(index) in list_task["uncomplete"]:
+        if index.isdigit() and list_task["uncomplete"][int(index)-1] in list_task["uncomplete"]:
             break
-    list_task["complete"].append(list_task["uncomplte"][index])
-    list_task["uncomplete"].pop(index)
+    list_task["complete"].append(list_task["uncomplete"][int(index)-1])
+    list_task["uncomplete"].pop(int(index)-1)
     
 def remove_task_with_title(list_task):
     task = ""
@@ -44,8 +44,8 @@ def remove_task_with_title(list_task):
 def show_task_list(list_task):
     print("\nYour task(s):")
     uncomplete_tasks = list_task["uncomplete"]
-    complete_tasks = list_task["uncomplete"]
-    # print("DEBUG:", uncomplete_tasks)
+    complete_tasks = list_task["complete"]
+    # print("DEBUG:", list_task)
     if uncomplete_tasks:
         print("\nUmcompleted Tasks:")
         for i in range(len(uncomplete_tasks)):
@@ -60,14 +60,14 @@ def show_task_list(list_task):
             
 
 def fill_task_list() -> dict[str,list]:
-    list_task = {}
+    list_task = {"uncomplete":[] , "complete":[]}
     uncomplete = []
     task_title = ""
     while task_title != "done":
-        if task_title and task_title not in list_task:
+        if task_title and task_title not in list_task["uncomplete"]:
             uncomplete.append(task_title)
         task_title = input("\nPlease entre a task title: ").strip().lower()
-    if list_task:
+    if uncomplete:
         list_task = { "uncomplete" : uncomplete, "complete" : []}
         show_task_list(list_task)
     return list_task
@@ -89,7 +89,7 @@ def main():
         "1": (remove_task_with_title, {"list_task":list_task}),
         "2": (remove_task_whith_index, {"list_task":list_task}),
     }
-    while list_task:  
+    while list_task["uncomplete"]:  
         choice = get_choice()
         if choice == "0" :
             break
