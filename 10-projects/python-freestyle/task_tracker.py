@@ -23,7 +23,7 @@ def remove_task_whith_index(list_task):
     while list_task["uncomplete"]:
         show_task_list(list_task)
         index = input("\nEnter your task index from the list: ").strip().lower()
-        if index.isdigit() and list_task["uncomplete"][int(index)-1] in list_task["uncomplete"]:
+        if index.isdigit() and int(index) in range(1,len(list_task["uncomplete"])+1):
             break
     list_task["complete"].append(list_task["uncomplete"][int(index)-1])
     list_task["uncomplete"].pop(int(index)-1)
@@ -64,7 +64,7 @@ def fill_task_list() -> dict[str,list]:
     uncomplete = []
     task_title = ""
     while task_title != "done":
-        if task_title and task_title not in list_task["uncomplete"]:
+        if task_title and task_title not in uncomplete:
             uncomplete.append(task_title)
         task_title = input("\nPlease entre a task title: ").strip().lower()
     if uncomplete:
