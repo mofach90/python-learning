@@ -5,6 +5,11 @@
 # }
 # then just send the uncomplete tasks to the remove functions, and inside the funtion move the uncomplete to the complete
 
+
+import json
+from pathlib import Path
+from textwrap import indent
+
 def get_choice():
     choices = ["0","1","2"]
     while True:
@@ -80,6 +85,12 @@ def fill_task_list() -> dict[str,list]:
 #             complete[n] = (t,b)
 #             n += 1
 #     return new_task_list
+def save_data(data, target_file):
+    tarjet_folder = Path.cwd() / "Tasks"
+    tarjet_folder.mkdir(exist_ok=True)
+    target = tarjet_folder / target_file
+    with open( target, "w", encoding="utf-8") as file:
+        json.dump(data,file, indent=2)
 
 def main():
     
@@ -98,11 +109,30 @@ def main():
             func(**kwargs)
         if list_task: 
             show_task_list(list_task)
+    save_data(list_task, "test1.json")
     print("\nExiting....")
 
     return
 
 main()
-    
+# import json
+# import os
+# from pathlib import Path
+# 
+# 
+# 
+# current_dir = Path.cwd()
+# print("current path:", current_dir, type(current_dir))
+# 
+# test_folder = current_dir / "Tests"
+# test_folder.mkdir(exist_ok=True)
+# test_file = test_folder / "test1.json"
+# 
+# data = [{"a":"ddd", "b":12}, "22", 32]
+# 
+# 
+# with open(test_file, "w", encoding="utf-8") as file:
+#     json.dump(data,file, indent=2 )
+
 
 
