@@ -7,6 +7,7 @@
 
 
 import json
+from logging import DEBUG
 from pathlib import Path
 from textwrap import indent
 
@@ -85,16 +86,38 @@ def fill_task_list() -> dict[str,list]:
 #             complete[n] = (t,b)
 #             n += 1
 #     return new_task_list
-def save_data(data, target_file):
+def save_data(data, target_file_name):
     tarjet_folder = Path.cwd() / "Tasks"
     tarjet_folder.mkdir(exist_ok=True)
-    target = tarjet_folder / target_file
-    with open( target, "w", encoding="utf-8") as file:
-        json.dump(data,file, indent=2)
+    target = tarjet_folder / target_file_name
+    try:
+        with open( target, "w", encoding="utf-8") as file:
+            json.dump(data,file, indent=2)
+    except Exception as error:
+        print("Data is not saved and the error is :", error)
+    finally:
+        print("save data function runs...")
+
+def restore_local_data() -> dict[str,list]:
+    data = {}
+    file_path = input("If you have a List of tasks , privide the file path or leave empty: ").lower().strip()
+    try:
+        with open(file_path,"r", encoding="utf-8") as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        print("no local data found, start with empty list")
+        return {}
+    except Exception:
+        print("Error: ", Exception)
+    return data
 
 def main():
-    
-    list_task = fill_task_list()
+    data = restore_local_data()
+    if data["uncomplete"]:
+        list_task = data
+    else:
+        list_task = fill_task_list()
+    print("Data:", list_task)
     choice_action_map = {
         "0": (),
         "1": (remove_task_with_title, {"list_task":list_task}),
@@ -128,11 +151,17 @@ main()
 # test_folder.mkdir(exist_ok=True)
 # test_file = test_folder / "test1.json"
 # 
-# data = [{"a":"ddd", "b":12}, "22", 32]
+# data = {"1":{"a":"ddd", "b":12}, "22":2, 32:1}
 # 
 # 
 # with open(test_file, "w", encoding="utf-8") as file:
-#     json.dump(data,file, indent=2 )
-
-
+#     json.dump(data,file)
+# 
+# with open(test_file, "r", encoding="utf-8") as file:
+#     # data1 = json.load(file)
+#     # data1 = file.read()
+#     # print("data1:", data1)
+#     # print(type(data1))
+#     data2 = json.loads(file.read())
+#     print("data2:", data2)
 

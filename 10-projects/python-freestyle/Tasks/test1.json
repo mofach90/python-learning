@@ -1,6 +1,6 @@
 {
-  "uncomplete": [],
+  "uncomplete": ["a", "b"],
   "complete": [
-    "aa"
+    "s"
   ]
 }
