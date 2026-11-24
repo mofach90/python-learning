@@ -11,18 +11,29 @@ from logging import DEBUG
 from pathlib import Path
 from textwrap import indent
 
-def get_choice():
+def get_choice(choice_type=1):
     choices = ["0","1","2"]
-    while True:
-        print("\nChoose how you would search and check a task:")
-        print("0- Exit the program")
-        print("1- for Task Title")
-        print("2- for Task Index")
-        choice = input("\nEnter your choice: ").strip()
-        if choice in choices:
-            return choice
-        print("\n Please provide a valid choice :) ")
-        
+    if choice_type:
+        while True:
+            print("\nChoose how you would search and check a task:")
+            print("0- Exit the program")
+            print("1- for Task Title")
+            print("2- for Task Index")
+            choice = input("\nEnter your choice: ").strip()
+            if choice in choices:
+                return choice
+            print("\n Please provide a valid choice :) ")
+    else:
+        while True:
+            print("\nChoose how to continue:")
+            print("0- Exit the program")
+            print("1- continue with the current list")
+            print("2- add new tasks")
+            choice = input("\nEnter your choice: ").strip()
+            if choice in choices:
+                return choice
+            print("\n Please provide a valid choice :) ")
+
 def remove_task_whith_index(list_task):
     # print("DEBUG:", list_task)
     index = ''
@@ -43,10 +54,6 @@ def remove_task_with_title(list_task):
     list_task["complete"].append(task)
     list_task["uncomplete"].remove(task)
  
-
-
-
-
 def show_task_list(list_task):
     print("\nYour task(s):")
     uncomplete_tasks = list_task["uncomplete"]
@@ -64,8 +71,8 @@ def show_task_list(list_task):
         for i in range(len(complete_tasks)):
             print(f"{i+1} : \033[9m{complete_tasks[i]}\033[0m")
             
-
 def fill_task_list() -> dict[str,list]:
+    print("\nStart filling task ...")
     list_task = {"uncomplete":[] , "complete":[]}
     uncomplete = []
     task_title = ""
@@ -78,14 +85,6 @@ def fill_task_list() -> dict[str,list]:
         show_task_list(list_task)
     return list_task
 
-# def get_new_task_list(list_task) -> dict[str,tuple]:
-#     new_task_list = {}
-#     n = 1
-#     for (t, b) in list_task.items():
-#         if b:
-#             complete[n] = (t,b)
-#             n += 1
-#     return new_task_list
 def save_data(data, target_file_name):
     tarjet_folder = Path.cwd() / "Tasks"
     tarjet_folder.mkdir(exist_ok=True)
@@ -100,24 +99,41 @@ def save_data(data, target_file_name):
 
 def restore_local_data() -> dict[str,list]:
     data = {}
-    file_path = input("If you have a List of tasks , privide the file path or leave empty: ").lower().strip()
+    file_path = Path.cwd() / "Tasks/tasks.json"
+    # file_path = input("If you have a List of tasks , privide the file path or leave empty: ").lower().strip()
     try:
         with open(file_path,"r", encoding="utf-8") as file:
             data = json.load(file)
     except FileNotFoundError:
         print("no local data found, start with empty list")
-        return {}
+        return data
+    except json.JSONDecodeError:
+        print("Json file is malformed")
+        exit()
     except Exception:
         print("Error: ", Exception)
     return data
 
 def main():
+    choice = 4
+    list_task = {"uncomplete":[], "complete":[]}
     data = restore_local_data()
-    if data["uncomplete"]:
+    print("\nData:", data)
+    if data:
+        choice = get_choice(0)
+
+    if choice == "0":
+        return
+    if choice == "1":
         list_task = data
-    else:
+    elif choice == "2" or not data:
         list_task = fill_task_list()
-    print("Data:", list_task)
+        if data:
+            list_task["uncomplete"] = list_task["uncomplete"] + data["uncomplete"]
+            list_task["complete"] = list_task["complete"] + data["complete"]
+            
+
+    print("\nData:", list_task)
     choice_action_map = {
         "0": (),
         "1": (remove_task_with_title, {"list_task":list_task}),
@@ -132,7 +148,7 @@ def main():
             func(**kwargs)
         if list_task: 
             show_task_list(list_task)
-    save_data(list_task, "test1.json")
+    save_data(list_task, "tasks.json")
     print("\nExiting....")
 
     return
